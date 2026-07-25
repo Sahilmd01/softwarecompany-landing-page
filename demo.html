@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>iLaczen · Precision Innovation</title>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Hanken Grotesk (Axion) + Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100..900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-tint": "#a63b00" ,
+            "primary": "#a63b00",
+            "primary-container": "#f26522",
+            "on-primary": "#ffffff",
+            "background": "#fff8f6",
+            "on-background": "#261813",
+            "surface": "#fff8f6",
+            "surface-variant": "#f7ddd4",
+            "outline": "#8d7166",
+            "on-surface": "#261813",
+            "on-surface-variant": "#594138",
+            "outline-variant": "#e1bfb3",
+            "surface-container": "#ffe9e2",
+          },
+          borderRadius: {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "margin-tablet": "40px",
+            "margin-mobile": "20px",
+            "unit": "4px",
+            "margin-desktop": "80px",
+            "gutter": "24px",
+            "container-max": "1440px"
+          },
+          fontFamily: {
+            "body-lg": ["Hanken Grotesk", "Inter"],
+            "body-md": ["Hanken Grotesk", "Inter"],
+            "headline-xl": ["Hanken Grotesk", "Inter"],
+            "label-caps": ["Hanken Grotesk", "Inter"],
+            "headline-md": ["Hanken Grotesk", "Inter"],
+            "headline-lg": ["Hanken Grotesk", "Inter"],
+            "body-sm": ["Hanken Grotesk", "Inter"],
+            "inter": ["Inter"]
+          },
+          fontSize: {
+            "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0", "fontWeight": "500" }],
+            "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0", "fontWeight": "500" }],
+            "headline-xl": ["80px", { "lineHeight": "86.4px", "letterSpacing": "-0.03em", "fontWeight": "500" }],
+            "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+            "headline-md": ["32px", { "lineHeight": "34.5px", "letterSpacing": "-0.03em", "fontWeight": "500" }],
+            "headline-lg": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "500" }],
+            "body-sm": ["14px", { "lineHeight": "22px", "letterSpacing": "0", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Text-Roll */
+    .text-roll-container {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      height: 1.5em;
+    }
+    .text-roll-wrapper {
+      transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+      display: flex;
+      flex-direction: column;
+    }
+    .group:hover .text-roll-wrapper {
+      transform: translateY(-50%);
+    }
+    .ease-axion {
+      transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .headline-clamp {
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      line-height: 1.08;
+    }
+    /* FAQ */
+    .faq-item[open] summary .expand-icon {
+      transform: rotate(45deg);
+    }
+    /* Hero video */
+    .video-container {
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: scale(1.05);
+      opacity: 0;
+    }
+    .video-container.active {
+      transform: scale(1);
+      opacity: 1;
+    }
+    .white-gradient-fade {
+      background: linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 100%);
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== CORE FEATURES STYLES (Inter) ===== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .c1-container {
+      max-width: 1100px;
+      width: 100%;
+      text-align: center;
+      margin: 0 auto;
+      padding: 20px 0;
+    }
+
+    .c1-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #F5C344, #F28482, #B567C2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .c1-title {
+      font-size: 2.75rem;
+      font-weight: 500;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .c1-subtitle {
+      font-size: 1.125rem;
+      color: #64748b;
+      line-height: 1.5;
+      margin-bottom: 50px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+    }
+
+    .c1-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .c1-card {
+      border-radius: 20px;
+      height: 340px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+      text-align: left;
+      background: #F4F8F9;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .c1-card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #1e293b;
+      padding: 24px;
+      position: relative;
+      z-index: 2;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Card 1 - Smart Prompt Suggestions */
+    .c1-card-1 {
+      background: radial-gradient(circle at 50% 0%, #FFB347 0%, #F9ED96 30%, #F4F8F9 60%, #F4F8F9 100%);
+    }
+
+    .c1-prompt-box {
+      position: absolute;
+      top: 30px;
+      left: 24px;
+      right: 24px;
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 0.8rem;
+      color: #475569;
+      line-height: 1.6;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+      text-align: left;
+      z-index: 2;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+    }
+
+    .c1-blur-text {
+      background: linear-gradient(90deg, #FFB347, #E5A1F5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 600;
+    }
+
+    .c1-pill {
+      position: absolute;
+      top: 180px;
+      left: 40px;
+      background: white;
+      border: 1px solid black;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #1e293b;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      z-index: 3;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .c1-pill .star {
+      color: #a855f7;
+      font-size: 1rem;
+    }
+
+    .c1-cursor-arrow {
+      position: absolute;
+      top: 205px;
+      left: 110px;
+      z-index: 10;
+      fill: #0f172a;
+      stroke: white;
+      stroke-width: 1px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Card 2 - API Access */
+    .c1-card-2 {
+      background: radial-gradient(circle at 50% 0%, #E5A1F5 0%, #F8ACA0 30%, #F4F8F9 60%, #F4F8F9 100%);
+    }
+
+    .c1-api-visual {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+      z-index: 1;
+    }
+
+    .c1-network-img {
+      width: 100%;
+      height: 180px;
+      object-fit: contain;
+      margin-top: 20px;
+    }
+
+    /* Card 3 - Project Library */
+    .c1-card-3 {
+      background: radial-gradient(circle at 50% 0%, #F9ED96 0%, #E5A1F5 30%, #F4F8F9 60%, #F4F8F9 100%);
+    }
+
+    .c1-mesh {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px);
+      background-size: 16px 16px;
+      mask-image: radial-gradient(circle at center top, black 0%, transparent 80%);
+      -webkit-mask-image: radial-gradient(circle at center top, black 0%, transparent 80%);
+      z-index: 0;
+    }
+
+    .c1-folder {
+      position: absolute;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 170px;
+      filter: drop-shadow(0 15px 25px rgba(0,0,0,0.08));
+      z-index: 1;
+    }
+
+    .c1-search {
+      position: absolute;
+      top: 220px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 1px solid black;
+      border-radius: 20px;
+      padding: 6px 18px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #1e293b;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 2;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .c1-search svg {
+      width: 14px;
+      height: 14px;
+      stroke: #64748b;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .c1-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .c1-title {
+        font-size: 2.25rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .c1-grid {
+        grid-template-columns: 1fr;
+      }
+      .c1-title {
+        font-size: 2rem;
+      }
+      .c1-card {
+        height: 320px;
+      }
+    }
+  </style>
+</head>
+<body class="bg-[#EFEFEF] text-on-surface font-body-md selection:bg-primary-container selection:text-white">
+
+  <!-- ====== NAVIGATION ====== -->
+  <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-center px-margin-mobile md:px-margin-desktop py-8">
+    <nav class="bg-white/70 backdrop-blur-xl rounded-full border border-outline/10 shadow-sm flex items-center justify-between px-6 py-3 w-full max-w-4xl ease-axion transition-transform duration-200">
+      <div class="flex items-center gap-8">
+        <a class="font-headline-md text-headline-md font-bold text-primary" href="#">iL</a>
+        <div class="hidden md:flex items-center gap-6">
+          <a class="font-body-md text-on-surface-variant hover:text-primary transition-all duration-300 ease-axion" href="#">Solutions</a>
+          <a class="font-body-md text-on-surface-variant hover:text-primary transition-all duration-300 ease-axion" href="#">Company</a>
+          <a class="font-body-md text-on-surface-variant hover:text-primary transition-all duration-300 ease-axion" href="#">Journal</a>
+          <a class="font-body-md text-on-surface-variant hover:text-primary transition-all duration-300 ease-axion" href="#">Connect</a>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="hidden lg:flex flex-col items-end mr-4">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Bengaluru Time</span>
+          <span class="font-body-sm tabular-nums text-on-surface-variant" id="clock-bengaluru">00:00</span>
+        </div>
+        <button class="group bg-primary-container text-on-primary rounded-full px-6 py-2.5 overflow-hidden relative">
+          <div class="text-roll-container">
+            <div class="text-roll-wrapper font-bold text-body-sm">
+              <span class="h-[1.5em] flex items-center">Get Started</span>
+              <span class="h-[1.5em] flex items-center">Book a call</span>
+            </div>
+          </div>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ====== HERO (FULLY VISIBLE) ====== -->
+  <section class="relative min-h-screen flex items-center justify-center pt-24 pb-20 overflow-hidden">
+    <!-- Background Video -->
+    <div class="video-container absolute inset-0 z-0 flex items-center justify-center" id="hero-video">
+      <video autoplay="" class="w-full h-full object-cover" loop="" muted="" playsinline="" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_215831_c6a8989c-d716-4d8d-8745-e972a2eec711.mp4">
+      </video>
+    </div>
+    <!-- Hero Content -->
+    <div class="relative z-10 mt-auto w-full white-gradient-fade pt-32 pb-margin-mobile md:pb-margin-desktop px-margin-mobile md:px-margin-desktop">
+      <div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-end gap-12">
+        <div class="w-full md:max-w-2xl reveal stagger-1">
+          <div class="mb-6 flex items-center gap-2 px-4 py-1.5 bg-white/50 backdrop-blur-md rounded-full border border-outline/10 w-fit">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+            <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">iLaczen Solutions</span>
+          </div>
+          <h1 class="font-headline-xl headline-clamp mb-8 text-on-surface tracking-tight">
+            Innovative solutions for a <br/>better tomorrow. Starting now.
+          </h1>
+          <div class="flex flex-wrap gap-4">
+            <button class="bg-primary-container text-white px-10 py-5 rounded-full text-body-lg font-bold shadow-xl shadow-primary-container/20 transition-transform hover:scale-[1.02] active:scale-95 ease-axion">
+              <div class="text-roll-container">
+                <div class="text-roll-wrapper">
+                  <span class="h-[1.5em] flex items-center">Start a project</span>
+                  <span class="h-[1.5em] flex items-center">Let's innovate</span>
+                </div>
+              </div>
+            </button>
+            <button class="border border-outline-variant text-primary px-8 py-4 rounded-full font-label-md text-label-md hover:bg-surface-container-low transition-colors">
+              Our methodology
+            </button>
+          </div>
+        </div>
+        <div class="hidden md:flex flex-col gap-4 items-end reveal stagger-2">
+          <div class="flex gap-2">
+            <span class="px-4 py-2 bg-surface-container text-on-surface-variant rounded-full font-label-sm text-label-sm border border-outline-variant/20">Cloud</span>
+            <span class="px-4 py-2 bg-surface-container text-on-surface-variant rounded-full font-label-sm text-label-sm border border-outline-variant/20">AI</span>
+            <span class="px-4 py-2 bg-surface-container text-on-surface-variant rounded-full font-label-sm text-label-sm border border-outline-variant/20">Infra</span>
+          </div>
+          <p class="text-right text-on-surface-variant font-body-sm text-body-sm max-w-[200px]">
+            Trusted partner for government, enterprise, and digital transformation.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-40 z-20">
+      <span class="text-[10px] font-bold uppercase tracking-widest">Scroll to Explore</span>
+      <span class="material-symbols-outlined">expand_more</span>
+    </div>
+  </section>
+
+  <!-- ====== ABOUT SECTION ====== -->
+  <section class="bg-white pt-32 pb-48 relative overflow-hidden">
+    <div class="container mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="flex items-center justify-center w-10 h-10 rounded-full border border-outline-variant font-bold text-primary">1</span>
+        <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">How iLaczen Works</span>
+      </div>
+      <h2 class="font-headline-lg text-headline-lg md:text-[64px] leading-tight mb-24 max-w-4xl text-on-surface">
+        iLaczen is comprised of a talented team of technology specialists.
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+        <div class="md:col-span-3">
+          <div class="aspect-[3/4] rounded-lg overflow-hidden border border-outline/10 shadow-sm transition-transform duration-700 hover:scale-[1.03]">
+            <img class="w-full h-full object-cover" alt="Sophisticated architectural detail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj2OpSoNJxJ6td4OyuFYjqfWMXcX-smo-kp2dwp2YFt3puoG_4P1MRdST1D0Wzbjg5zA7b4Srln9qpljqL9bW9YYq4Mf0pma8fXwDmxuOnn-ewn77JfG8j_UItqIlavwPAKCI7mfTn1JQjvwU8DD1WKuGNo06rxBtXiHbUVFgnOyZenCzONjmZAPWAH2SpQcPwL7s9vbgMNkMEw6oanrB9yVJf6V_y_4qdJ-kBpD6vFxQbdVzyM3Qjqt963PrKhowbajw_sU4ZI8E"/>
+          </div>
+        </div>
+        <div class="md:col-span-4 md:px-8 space-y-8 py-12 md:py-0">
+          <p class="font-body-lg text-on-surface-variant leading-relaxed">
+            We collaborate to bring exceptional solutions to our clients across various sectors. Our team's deep expertise in infrastructure, cloud, and digital transformation allows us to solve complex challenges with agility and precision. We are committed to fostering growth through technological innovation.
+          </p>
+          <button class="group flex items-center gap-4 text-primary font-bold text-body-lg">
+            <span class="px-6 py-3 bg-primary-container/10 rounded-full group-hover:bg-primary-container group-hover:text-white transition-all duration-300">About Our Team</span>
+            <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform duration-300">arrow_forward</span>
+          </button>
+        </div>
+        <div class="md:col-span-5">
+          <div class="aspect-[3/2] rounded-lg overflow-hidden border border-outline/10 shadow-sm transition-transform duration-700 hover:scale-[1.03]">
+            <img class="w-full h-full object-cover" alt="Modern collaborative workspace" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUwP8Vdi9sBmdLHEN6U9OcuYaRAxQ4_hN1u2u6mqYeSan5mUjSnhePHv211D07xIIBzCJpz488zYn_vbj_NikZbSZXDqBQmTHzTGDFRpJG77KtwL22A3Q73hQYJS3W8cPFewboO5m7PxGI_yQFqcCG5WYyfs8BL9tsdZCTj30wKD5V8Za1Qd8N_61ABGgWrrCkBa7WMJRHq2Oo-aR1DuVH_78P7SOjKFV_HAnGSxkK1ct8ookuAeZreKf581Hv31yY8d4vO_Ob8cE"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CASE STUDIES / DEFINING THE NEW STANDARD (from Axion) ====== -->
+  <section class="bg-[#F5F5F5] py-32">
+    <div class="container mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
+        <div>
+          <div class="flex items-center gap-4 mb-6">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full border border-outline-variant font-bold text-primary">2</span>
+            <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Featured client work</span>
+          </div>
+          <h2 class="font-headline-lg text-headline-lg text-on-surface">Defining the new standard.</h2>
+        </div>
+        <a class="font-body-md font-bold text-primary flex items-center gap-2 hover:opacity-70 transition-opacity" href="#">
+          Explore all projects <span class="material-symbols-outlined">north_east</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <!-- Case Study 1 -->
+        <div class="group cursor-pointer">
+          <div class="relative aspect-video rounded-lg overflow-hidden border border-outline/5 bg-white mb-6">
+            <video autoplay="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" loop="" muted="" playsinline="">
+              <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260516_122702_390f5305-8719-41d5-ae80-d23ab3796c28.mp4" type="video/mp4"/>
+            </video>
+            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div class="bg-white text-on-surface px-8 py-3 rounded-full font-bold flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                <span>Learn more</span>
+                <span class="material-symbols-outlined text-[18px]">add</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-headline-md text-[24px] text-on-surface mb-1">Narrativ</h3>
+              <p class="font-body-sm text-on-surface-variant/70">AI Content Ecosystem — 2024</p>
+            </div>
+            <div class="flex gap-2">
+              <span class="px-3 py-1 rounded-full border border-outline/10 text-[10px] font-bold uppercase tracking-tighter">Branding</span>
+              <span class="px-3 py-1 rounded-full border border-outline/10 text-[10px] font-bold uppercase tracking-tighter">Web3</span>
+            </div>
+          </div>
+        </div>
+        <!-- Case Study 2 -->
+        <div class="group cursor-pointer">
+          <div class="relative aspect-video rounded-lg overflow-hidden border border-outline/5 bg-white mb-6">
+            <video autoplay="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" loop="" muted="" playsinline="">
+              <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260516_123323_f909c2b8-ff6c-4edf-882b-8ebcdbe389b5.mp4" type="video/mp4"/>
+            </video>
+            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div class="bg-white text-on-surface px-8 py-3 rounded-full font-bold flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                <span>View case study</span>
+                <span class="material-symbols-outlined text-[18px]">visibility</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-headline-md text-[24px] text-on-surface mb-1">Luminar</h3>
+              <p class="font-body-sm text-on-surface-variant/70">Smart Lighting OS — 2023</p>
+            </div>
+            <div class="flex gap-2">
+              <span class="px-3 py-1 rounded-full border border-outline/10 text-[10px] font-bold uppercase tracking-tighter">UX/UI</span>
+              <span class="px-3 py-1 rounded-full border border-outline/10 text-[10px] font-bold uppercase tracking-tighter">Strategy</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CORE FEATURES SECTION (NEW) ====== -->
+  <section class="bg-white py-16">
+    <div class="c1-container">
+      <!-- Header -->
+      <span class="c1-badge">Core Features</span>
+      <h2 class="c1-title">Built for Speed &amp; Quality</h2>
+      <p class="c1-subtitle">
+        Everything you need to go<br/>from idea to image
+      </p>
+
+      <!-- Grid -->
+      <div class="c1-grid">
+        <!-- Card 1: Smart Prompt Suggestions -->
+        <div class="c1-card c1-card-1">
+          <div class="c1-prompt-box">
+            A bright, high-resolution 3D illustration of a <span class="c1-blur-text">cheerful cartoon</span> of a <span class="c1-blur-text">girl character</span> <span class="c1-blur-text">centred against a</span> smooth blue background
+          </div>
+          <div class="c1-pill">
+            <span class="star">✦</span> Add more details
+          </div>
+          <svg class="c1-cursor-arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 2L20 11L11 13L9 22L4 2Z"/>
+          </svg>
+          <h3>Smart Prompt Suggestions</h3>
+        </div>
+
+        <!-- Card 2: API Access -->
+        <div class="c1-card c1-card-2">
+          <div class="c1-api-visual">
+            <img class="c1-network-img" src="https://pub-f170a2592d2c4a1485466404c36807be.r2.dev/viktor/network.svg" alt="Network visualization"/>
+          </div>
+          <h3>API Access</h3>
+        </div>
+
+        <!-- Card 3: Project Library -->
+        <div class="c1-card c1-card-3">
+          <div class="c1-mesh"></div>
+          <img class="c1-folder" src="https://pub-f170a2592d2c4a1485466404c36807be.r2.dev/viktor/library%20icon.svg" alt="Folder icon"/>
+          <div class="c1-search">
+            <svg viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            Search in library
+          </div>
+          <h3>Project Library</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SERVICES SECTION (Original iLaczen) ====== -->
+  <section class="bg-white py-32 border-t border-outline/5">
+    <div class="container mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="flex items-center justify-center w-10 h-10 rounded-full border border-outline-variant font-bold text-primary">3</span>
+        <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Our Expertise</span>
+      </div>
+      <h2 class="font-headline-lg text-headline-lg md:text-[64px] leading-tight mb-20 max-w-4xl text-on-surface">
+        Comprehensive IT services for modern enterprise.
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+        <div class="group p-8 rounded-lg border border-outline/5 bg-surface-container/30 hover:bg-white hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 ease-axion">
+          <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform duration-500">
+            <span class="material-symbols-outlined">account_balance</span>
+          </div>
+          <h3 class="font-headline-md text-[24px] mb-4">Government &amp; Public Services</h3>
+          <p class="font-body-sm text-on-surface-variant/80">Delivering robust digital infrastructure and secure solutions tailored for public sector efficiency and citizen engagement.</p>
+        </div>
+        <div class="group p-8 rounded-lg border border-outline/5 bg-surface-container/30 hover:bg-white hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 ease-axion">
+          <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform duration-500">
+            <span class="material-symbols-outlined">settings_suggest</span>
+          </div>
+          <h3 class="font-headline-md text-[24px] mb-4">Business Process Management</h3>
+          <p class="font-body-sm text-on-surface-variant/80">Optimizing core business operations through automation and intelligent workflow design to drive productivity.</p>
+        </div>
+        <div class="group p-8 rounded-lg border border-outline/5 bg-surface-container/30 hover:bg-white hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 ease-axion">
+          <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform duration-500">
+            <span class="material-symbols-outlined">router</span>
+          </div>
+          <h3 class="font-headline-md text-[24px] mb-4">Infrastructure Service</h3>
+          <p class="font-body-sm text-on-surface-variant/80">Building and maintaining resilient networking and server architectures that form the backbone of your digital presence.</p>
+        </div>
+        <div class="group p-8 rounded-lg border border-outline/5 bg-surface-container/30 hover:bg-white hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 ease-axion">
+          <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform duration-500">
+            <span class="material-symbols-outlined">developer_mode</span>
+          </div>
+          <h3 class="font-headline-md text-[24px] mb-4">Application Development &amp; Maintenance</h3>
+          <p class="font-body-sm text-on-surface-variant/80">Custom software development and ongoing support to ensure your applications remain cutting-edge and reliable.</p>
+        </div>
+        <div class="group p-8 rounded-lg border border-outline/5 bg-surface-container/30 hover:bg-white hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 ease-axion">
+          <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform duration-500">
+            <span class="material-symbols-outlined">cloud_queue</span>
+          </div>
+          <h3 class="font-headline-md text-[24px] mb-4">Cloud Service</h3>
+          <p class="font-body-sm text-on-surface-variant/80">Scalable cloud migration and management strategies to enhance flexibility, security, and global reach.</p>
+        </div>
+        <div class="group p-8 rounded-lg border border-outline/5 bg-surface-container/30 hover:bg-white hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 ease-axion">
+          <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform duration-500">
+            <span class="material-symbols-outlined">psychology</span>
+          </div>
+          <h3 class="font-headline-md text-[24px] mb-4">IT Consultancy</h3>
+          <p class="font-body-sm text-on-surface-variant/80">Strategic guidance from industry experts to align your technology roadmap with long-term business goals.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FAQ SECTION ====== -->
+  <section class="bg-[#F5F5F5] py-32">
+    <div class="container mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="flex items-center justify-center w-10 h-10 rounded-full border border-outline-variant font-bold text-primary">4</span>
+        <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Frequently Asked Questions</span>
+      </div>
+      <div class="max-w-4xl">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mb-16">Common inquiries.</h2>
+        <div class="space-y-4">
+          <details class="faq-item group bg-white rounded-xl border border-outline/10 overflow-hidden">
+            <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+              <span class="font-body-lg font-bold text-on-surface">Do you provide training and support for new systems?</span>
+              <span class="material-symbols-outlined expand-icon transition-transform duration-300">add</span>
+            </summary>
+            <div class="px-6 pb-6 pt-2 font-body-md text-on-surface-variant">
+              Yes, we offer comprehensive post-deployment training and ongoing support to ensure your team is fully equipped to leverage new technologies effectively.
+            </div>
+          </details>
+          <details class="faq-item group bg-white rounded-xl border border-outline/10 overflow-hidden">
+            <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+              <span class="font-body-lg font-bold text-on-surface">How do you handle scope changes during a project?</span>
+              <span class="material-symbols-outlined expand-icon transition-transform duration-300">add</span>
+            </summary>
+            <div class="px-6 pb-6 pt-2 font-body-md text-on-surface-variant">
+              We follow an agile methodology. Any changes to scope are discussed transparently with our clients, assessing impact on timelines and budgets before implementation.
+            </div>
+          </details>
+          <details class="faq-item group bg-white rounded-xl border border-outline/10 overflow-hidden">
+            <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+              <span class="font-body-lg font-bold text-on-surface">What measures do you take for data privacy and security?</span>
+              <span class="material-symbols-outlined expand-icon transition-transform duration-300">add</span>
+            </summary>
+            <div class="px-6 pb-6 pt-2 font-body-md text-on-surface-variant">
+              Security is built into every layer of our process. We adhere to international security standards and implement rigorous data protection protocols for all our client projects.
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== NEWSLETTER ====== -->
+  <section class="bg-white py-24 border-t border-outline/5">
+    <div class="container mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 bg-surface-container/20 p-12 rounded-xl border border-outline/10">
+        <div class="text-center md:text-left">
+          <h2 class="font-headline-md text-on-surface mb-2">Join Our Newsletter</h2>
+          <p class="font-body-md text-on-surface-variant">Insights on technology, cloud, and digital innovation.</p>
+        </div>
+        <form class="flex w-full md:w-auto items-center gap-2">
+          <input class="bg-white border-none rounded-full px-6 py-4 font-body-md text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary-container transition-all min-w-[280px]" placeholder="Email address" type="email"/>
+          <button class="group bg-primary-container text-white p-4 rounded-full transition-transform hover:scale-105 active:scale-95 ease-axion shadow-lg shadow-primary-container/20">
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="bg-white border-t border-outline-variant pt-24 pb-12">
+    <div class="container mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+        <div>
+          <a class="font-headline-md text-headline-md font-bold text-primary block mb-4" href="#">iL</a>
+          <p class="font-body-md text-on-surface-variant max-w-[200px]">iLaczen Solutions — Engineering a smarter tomorrow through innovation.</p>
+        </div>
+        <div>
+          <h4 class="font-label-caps text-label-caps text-on-surface-variant/40 uppercase tracking-widest mb-6">Services</h4>
+          <ul class="space-y-4">
+            <li><a class="font-body-md text-on-surface hover:text-primary transition-colors" href="#">Cloud Services</a></li>
+            <li><a class="font-body-md text-on-surface hover:text-primary transition-colors" href="#">Infrastructure</a></li>
+            <li><a class="font-body-md text-on-surface hover:text-primary transition-colors" href="#">IT Consultancy</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-label-caps text-label-caps text-on-surface-variant/40 uppercase tracking-widest mb-6">Contact Us</h4>
+          <ul class="space-y-4">
+            <li><a class="font-body-md text-on-surface hover:text-primary transition-colors" href="mailto:ilaczen@gmail.com">ilaczen@gmail.com</a></li>
+            <li><a class="font-body-md text-on-surface transition-colors" href="#">080-35711981 /82</a></li>
+            <li><a class="font-body-md text-on-surface hover:text-primary transition-colors" href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-label-caps text-label-caps text-on-surface-variant/40 uppercase tracking-widest mb-6">Headquarters</h4>
+          <div class="space-y-4 mb-8">
+            <p class="font-body-sm text-on-surface-variant">1018, 16th Main Rd, Tavarekere, Aicobo Nagar, BTM 1st stage, Bengaluru, Karnataka-560029</p>
+          </div>
+          <button class="group bg-primary-container text-on-primary rounded-full px-8 py-3 overflow-hidden relative inline-block">
+            <div class="text-roll-container">
+              <div class="text-roll-wrapper font-bold text-body-sm">
+                <span class="h-[1.5em] flex items-center">Get Started</span>
+                <span class="h-[1.5em] flex items-center">Contact Sales</span>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div class="flex flex-col md:flex-row justify-between items-center border-t border-outline/5 pt-8">
+        <p class="font-body-sm text-on-surface-variant/60">© Copyright iLaczen. All Rights Reserved</p>
+        <div class="flex items-center gap-8 mt-4 md:mt-0">
+          <a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Privacy Policy</a>
+          <a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Bengaluru Clock
+    function updateClock() {
+      const clock = document.getElementById('clock-bengaluru');
+      const now = new Date();
+      const options = {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      };
+      const time = new Intl.DateTimeFormat('en-GB', options).format(now);
+      clock.textContent = time;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Reveal animations
+    document.addEventListener('DOMContentLoaded', () => {
+      const observerOptions = { threshold: 0.1 };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, observerOptions);
+      document.querySelectorAll('.video-container, .reveal').forEach(el => observer.observe(el));
+
+      setTimeout(() => {
+        document.getElementById('hero-video').classList.add('active');
+        document.querySelectorAll('.reveal').forEach((el, i) => {
+          setTimeout(() => el.classList.add('active'), 300 + i * 150);
+        });
+      }, 100);
+
+      const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('opacity-100');
+            entry.target.classList.remove('opacity-0', 'translate-y-10');
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('section > div').forEach(el => {
+        if (!el.classList.contains('c1-container')) {
+          el.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+          sectionObserver.observe(el);
+        }
+      });
+
+      window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const video = document.querySelector('#hero-video video');
+        if (video) {
+          video.style.transform = `translateY(${scrolled * 0.08}px) scale(${1 + scrolled * 0.0001})`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
